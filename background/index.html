@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>GCP DOGRUN</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <script src="js/materialize.min.js"></script>
+</head>
+<body>
+  <h1>Web Speech API</h1>
+  <input type="button" value="音声認識開始" onclick="recognition.start();">
+  <div id="output"></div>
+
+
+  <!--  Scripts-->
+  <script>
+      // インスタンスを作成
+      var recognition = new window.webkitSpeechRecognition();
+      // 認識したい言語の設定
+      recognition.lang = "ja-JP";
+      // 結果を受け取るためのonresult関数の定義
+      recognition.onresult = function(event){
+          document.getElementById("output").innerHTML = "...";
+          for (var i = event.resultIndex; i < event.results.length; i++){
+              console.log(event);
+              for (var j = 0; j < event.results[i].length; j++){
+                  console.log(event.results[i][j].transcript);
+                  if (event.results[i][j].transcript == "Hey 朝日") {
+                      document.getElementById("output").innerHTML = "ご用件は何でしょう？";
+                  }
+              }
+          }
+      };
+      // その他
+      recognition.continuous = true;
+      recognition.maxAlternatives = 10;
+      recognition.onspeechstart = function(){
+          document.getElementById("output").innerHTML = "話しかけてください。";
+      };
+      recognition.onerror = function(){
+          document.getElementById("output").innerHTML = "エラーが起きました。";
+      };
+      recognition.onnomatch = function(){
+          document.getElementById("output").innerHTML = "認識できませんでした。";
+      };
+  </script>
+
+  </body>
+</html>
